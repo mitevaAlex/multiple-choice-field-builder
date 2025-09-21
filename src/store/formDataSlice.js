@@ -29,7 +29,7 @@ const formDataSlice = createSlice({
     initialState,
     reducers: {
         setInputValue: (state, action) => {
-            state[action.payload.inputType] = action.payload.value;
+            action.payload.value !== " " && (state[action.payload.inputType] = action.payload.value);
         },
         addChoice: (state, action) => {
             const newChoice = action.payload.trim();
