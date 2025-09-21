@@ -19,24 +19,28 @@ function TextInput({
         <>
             <SectionWrapper additionalStyles={errorMsg && inputId === INPUT_TYPES.newChoice ? "mb-2" : "mb-7.5"}>
                 <label htmlFor={inputId}>{labelText}</label>
-                <input
-                    id={inputId}
-                    name={inputId}
-                    required={required}
-                    type="text"
-                    value={value}
-                    placeholder={placeholder}
-                    className="max-w-2xs px-3 leading-8 border border-[#cccccc] rounded-sm"
-                    onChange={(e) => { dispatch(setInputValue({ inputType: inputId, value: e.target.value })) }}
-                />
-                {buttonFunc
-                    && buttonText
-                    && <button
-                        type="button"
-                        className="px-2 py-1 ml-4 bg-[#5bb85b] text-white rounded-sm cursor-pointer"
-                        onClick={buttonFunc}>{buttonText}
-                    </button>
-                }
+                <div className="flex flex-nowrap gap-3">
+                    <input
+                        id={inputId}
+                        name={inputId}
+                        required={required}
+                        type="text"
+                        size={buttonFunc && buttonText ? '19' : '27'}
+                        value={value}
+                        placeholder={placeholder}
+                        className="px-3 leading-8 border border-chinese-silver rounded-sm"
+                        onChange={(e) => { dispatch(setInputValue({ inputType: inputId, value: e.target.value })) }}
+                    />
+                    {buttonFunc
+                        && buttonText
+                        && <button
+                            type="button"
+                            className="px-2 py-1 bg-green text-white rounded-sm cursor-pointer"
+                            onClick={buttonFunc}>
+                            {buttonText}
+                        </button>
+                    }
+                </div>
             </SectionWrapper>
             {errorMsg
                 && inputId === INPUT_TYPES.newChoice

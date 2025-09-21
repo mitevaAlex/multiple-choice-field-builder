@@ -3,6 +3,7 @@ import SectionWrapper from "./components/SectionWrapper";
 import { INPUT_TYPES, ORDER_OPTIONS } from "./constants";
 import { useDispatch, useSelector } from "react-redux";
 import { addChoice, removeChoice, resetErrorMsg, resetFormData, setInputValue, setOrder } from "./store/formDataSlice";
+import { useState } from "react";
 
 function App() {
     const label = useSelector((state) => state.formDataSlice.label);
@@ -11,6 +12,8 @@ function App() {
     const newChoice = useSelector((state) => state.formDataSlice.newChoice);
     const choices = useSelector((state) => state.formDataSlice.choices);
     const order = useSelector((state) => state.formDataSlice.order);
+
+    const [selectedChoice, setSelectedChoice] = useState("");
 
     const dispatch = useDispatch();
 
@@ -48,22 +51,26 @@ function App() {
     };
 
     return (
-        <form onSubmit={(e) => { handleSubmit(e) }}>
-            <div className="max-w-md h-fit my-10 mx-auto border border-[#c4ebf3] rounded-md bg-white overflow-hidden">
-                <h2 className="px-5 py-2.5 bg-[#d9eef7] text-[#1f6d93] font-bold border border-[#c4ebf3]">
+        <form method="post" onSubmit={(e) => { handleSubmit(e) }}>
+            <div className="max-w-md h-fit my-10 mx-5 sm:mx-auto border border-diamond rounded-md bg-white overflow-hidden">
+                <h2 className="px-5 py-2.5 bg-azureish-white text-lapis-lazuli font-bold border border-diamond">
                     Field Builder
                 </h2>
 
-                <div className="flex flex-col w-full h-fit p-5">
+                <div className="flex flex-col justify-center w-full h-fit p-6 sm:p-7.5">
 
                     <TextInput value={label} labelText="Label" inputId={INPUT_TYPES.label} required placeholder="e.g. Sales Region" />
 
                     <SectionWrapper additionalStyles="mb-7.5">
-                        <label>Type</label>
-                        <strong>Multi-select</strong>
+                        <div className="flex gap-2.5">
+                            <p>Type</p>
+                            <strong>Multi-select</strong>
+                        </div>
 
-                        <label className="mx-2.5 flex items-center justify-center">
+                        <label className="flex items-center justify-center">
                             <input
+                                id={INPUT_TYPES.isValueRequired}
+                                name={INPUT_TYPES.isValueRequired}
                                 type="checkbox"
                                 checked={isValueRequired}
                                 className="mx-2.5 w-4 h-4"
@@ -84,18 +91,28 @@ function App() {
                     />
 
                     <SectionWrapper additionalStyles="mb-7.5 items-start">
-                        <h3>Choices</h3>
-                        <div className="w-64 min-h-[33.6px] border border-[#cccccc] rounded-sm overflow-hidden">
+                        <p>Choices</p>
+                        <div className="w-64 min-h-[33.6px] border border-chinese-silver rounded-sm overflow-hidden cursor-pointer">
                             {choices.map((choice, index) => (
                                 <div
                                     key={index}
-                                    className="flex items-center justify-between px-3 py-1 hover:bg-gray-100 group"
+                                    onClick={() => setSelectedChoice(choice)}
+                                    className={
+                                        `flex relative items-center justify-between px-3 py-1 hover:bg-anti-flash-white group 
+                                        ${selectedChoice === choice && 'bg-anti-flash-white'}`
+                                    }
                                 >
                                     <span>{choice}</span>
                                     <button
                                         type="button"
-                                        onClick={() => { console.log(choice); dispatch(removeChoice(choice)) }}
-                                        className="hidden group-hover:inline cursor-pointer text-gray-500 hover:text-red-600"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setSelectedChoice("");
+                                            dispatch(removeChoice(choice))
+                                        }}
+                                        className={
+                                            `hidden absolute group-hover:inline right-3 top-1 cursor-pointer 
+                                            text-auro-metal hover:text-red ${selectedChoice === choice && 'inline'}`}
                                     >
                                         ✕
                                     </button>
@@ -105,12 +122,12 @@ function App() {
                     </SectionWrapper>
 
                     <SectionWrapper additionalStyles="mb-7.5">
-                        <label htmlFor="order">Order</label>
+                        <label htmlFor={INPUT_TYPES.order}>Order</label>
                         <select
                             id={INPUT_TYPES.order}
                             name={INPUT_TYPES.order}
                             defaultValue={order}
-                            className="max-w-2xs px-3 leading-8 border border-[#cccccc] rounded-sm"
+                            className="w-64 h-[33.6px] px-3 leading-8 border border-chinese-silver rounded-sm"
                             onChange={(e) => { dispatch(setOrder(e.target.value)); }}
                         >
                             {ORDER_OPTIONS.map((option, index) => (
@@ -120,9 +137,9 @@ function App() {
                     </SectionWrapper>
 
                     <SectionWrapper additionalStyles="mt-2.5 mb-5 justify-center">
-                        <button type="submit" className="px-4 py-1 ml-4 bg-[#5bb85b] text-white font-medium rounded-sm cursor-pointer">Save shanges</button>
-                        <span className="mx-5">Or</span>
-                        <button type="reset" className="text-red-600 font-medium cursor-pointer" onClick={() => dispatch(resetFormData())}>Cancel</button>
+                        <button type="submit" className="px-4 py-1 ml-4 bg-green text-white font-medium rounded-sm cursor-pointer">Save shanges</button>
+                        <span>Or</span>
+                        <button type="reset" className="text-red font-medium cursor-pointer" onClick={() => dispatch(resetFormData())}>Cancel</button>
                     </SectionWrapper>
                 </div>
             </div>

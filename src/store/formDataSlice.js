@@ -32,12 +32,13 @@ const formDataSlice = createSlice({
             state[action.payload.inputType] = action.payload.value;
         },
         addChoice: (state, action) => {
-            if (state.choices.includes(action.payload)) state.errorMsg = "Duplicate choices are not allowed.";
+            const newChoice = action.payload.trim();
+            if (state.choices.includes(newChoice)) state.errorMsg = "Duplicate choices are not allowed.";
             else if (state.choices.count > 50) state.errorMsg = "There cannot be more than 50 choices total.";
-            else if (action.payload === "") state.errorMsg = "Cannot add an empty option.";
+            else if (newChoice === "") state.errorMsg = "Cannot add an empty option.";
             else {
-                state.choices.push(action.payload);
-                orderChoices(action.payload, state.choices);
+                state.choices.push(newChoice);
+                orderChoices(state.order, state.choices);
                 state.errorMsg = "";
             }
         },
