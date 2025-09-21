@@ -34,7 +34,7 @@ const formDataSlice = createSlice({
         addChoice: (state, action) => {
             const newChoice = action.payload.trim();
             if (state.choices.includes(newChoice)) state.errorMsg = "Duplicate choices are not allowed.";
-            else if (state.choices.count > 50) state.errorMsg = "There cannot be more than 50 choices total.";
+            else if (state.choices.length > 50) state.errorMsg = "There cannot be more than 50 choices total.";
             else if (newChoice === "") state.errorMsg = "Cannot add an empty option.";
             else {
                 state.choices.push(newChoice);
@@ -49,6 +49,9 @@ const formDataSlice = createSlice({
             state.order = action.payload;
             orderChoices(action.payload, state.choices);
         },
+        setErrorMsg: (state, action) => {
+            state.errorMsg = action.payload;
+        },
         resetErrorMsg: (state) => {
             state.errorMsg = "";
         },
@@ -56,5 +59,5 @@ const formDataSlice = createSlice({
     },
 });
 
-export const { setInputValue, addChoice, removeChoice, setOrder, resetErrorMsg, resetFormData } = formDataSlice.actions;
+export const { setInputValue, addChoice, removeChoice, setOrder, setErrorMsg, resetErrorMsg, resetFormData } = formDataSlice.actions;
 export default formDataSlice.reducer;

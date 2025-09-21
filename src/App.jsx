@@ -2,7 +2,7 @@ import TextInput from "./components/TextInput";
 import SectionWrapper from "./components/SectionWrapper";
 import { INPUT_TYPES, ORDER_OPTIONS } from "./constants";
 import { useDispatch, useSelector } from "react-redux";
-import { addChoice, removeChoice, resetErrorMsg, resetFormData, setInputValue, setOrder } from "./store/formDataSlice";
+import { addChoice, removeChoice, resetErrorMsg, resetFormData, setErrorMsg, setInputValue, setOrder } from "./store/formDataSlice";
 import { useState } from "react";
 
 function App() {
@@ -19,6 +19,10 @@ function App() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if(choices.length === 0) {
+            dispatch(setErrorMsg("Cannot have 0 choices."));
+            return;
+        }
         (!choices.includes(defaultValue) && defaultValue !== '') && dispatch(addChoice(defaultValue));
         dispatch(resetErrorMsg());
         try {
